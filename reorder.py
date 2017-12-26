@@ -4,20 +4,20 @@ from scipy.spatial import distance
 
 
 def write_video_full_resolution(video_file_in, video_file_out, frames, l_coresp):
-  """Write video in original resolution
+    """Write a video reordered and in its original resolution
 
-  Args:
-    video_file_in: original file
-    video_file_out: reorderd file
-    frames: frames order
-    l_coresp: links between the initial video and the video without the outliers
-  """
+    Args:
+      video_file_in: original file
+      video_file_out: reorderd file
+      frames: frames order
+      l_coresp: links between the initial video and the video without the outliers
+    """
     cap = cv2.VideoCapture(video_file_in)
 
-    info={}
-    info['fps']=cap.get(cv2.CAP_PROP_FPS)
-    info['codec']=cap.get(cv2.CAP_PROP_FOURCC)
-    info['frame']=(int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    info = {}
+    info['fps'] = cap.get(cv2.CAP_PROP_FPS)
+    info['codec'] = cap.get(cv2.CAP_PROP_FOURCC)
+    info['frame'] = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
     print(info)
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -139,11 +139,9 @@ def reord_frames(frame_list):
 
 def main():
     frame_list, histo_list = import_video_for_analysis('corrupted_video.mp4')
-    l_coresp= remove_outliers(histo_list,frame_list)
+    l_coresp = remove_outliers(histo_list, frame_list)
     frame_ordo = reord_frames(frame_list)
 
-
-    #create two videos with two frame orders since we don't know the 
     write_video_full_resolution('corrupted_video.mp4',
                                 "outfile_order1.mp4",
                                 frame_ordo,

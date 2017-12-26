@@ -5,7 +5,7 @@ from scipy.spatial import distance
 
 
 def write_video_full_resolution(video_file_in, video_file_out, frames, l_coresp):
-    """Write a video reordered and in its original resolution
+    """Write a video reordered in its original resolution
 
     Args:
       video_file_in: original file
@@ -28,12 +28,12 @@ def write_video_full_resolution(video_file_in, video_file_out, frames, l_coresp)
         idx = 0
         while 1:
             ret, frame_f = cap.read()
-            if ret:
-                if idx == l_coresp[el]:
-                    out.write(frame_f)
-                    print("rr")
-            else:
+
+            if not ret:
                 break
+            if idx == l_coresp[el]:
+                out.write(frame_f)
+                print("rr")
             idx+=1
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
@@ -53,11 +53,11 @@ def import_video_for_analysis(video_file):
 
     while 1:
         ret, frame_f = cap.read()
-        if ret:
-            frame_f = cv2.resize(frame_f, (64,64))
-            frame_list_dim.append(frame_f)
-        else:
+
+        if not ret:
             break
+        frame_f = cv2.resize(frame_f, (64,64))
+        frame_list_dim.append(frame_f)
 
     frame_list = [x.flatten() for x in frame_list_dim]
     histo_list = [cv2.calcHist([x], [0, 1, 2], None, [8, 8, 8],
@@ -66,8 +66,7 @@ def import_video_for_analysis(video_file):
 
     return frame_list, histo_list
 
-
-
+  
 def remove_outliers(histo_list, frame_list):
     """remove outilers from frame_list
 
@@ -120,7 +119,6 @@ def reord_frames(frame_list):
                 cur_im = arg_l[idx]
                 idx += 1
             seen_im.append(cur_im)
-
 
         #search the largest distance between consecutive frames
 

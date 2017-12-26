@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import cv2
 from scipy.spatial import distance
@@ -138,17 +139,27 @@ def reord_frames(frame_list):
     return seen_im
 
 def main():
-    frame_list, histo_list = import_video_for_analysis('corrupted_video.mp4')
+    parser = argparse.ArgumentParser(description='Reorder video')
+    parser.add_argument("-vi", "--video_in", required=True,
+                        help="Input video file")
+    parser.add_argument("-vo1", "--video_out_order_1", required=True,
+                        help="Output video file 1")
+    parser.add_argument("-vo2", "--video_out_order_2", required=True,
+                        help="Output video file 2")
+    
+    args = parser.parse_args()
+
+    frame_list, histo_list = import_video_for_analysis(args.video_in)
     l_coresp = remove_outliers(histo_list, frame_list)
     frame_ordo = reord_frames(frame_list)
 
-    write_video_full_resolution('corrupted_video.mp4',
-                                "outfile_order1.mp4",
+    write_video_full_resolution(args.video_in,
+                                args.video_out_order_1,
                                 frame_ordo,
                                 l_coresp)
 
-    write_video_full_resolution('corrupted_video.mp4',
-                                "outfile_order2.mp4",
+    write_video_full_resolution(args.video_in,
+                                args.video_out_order_2,
                                 frame_ordo[::-1],
                                 l_coresp)
 

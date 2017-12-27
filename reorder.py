@@ -28,12 +28,10 @@ def write_video_full_resolution(video_file_in, video_file_out, frames, l_coresp)
         idx = 0
         while 1:
             ret, frame_f = cap.read()
-
             if not ret:
                 break
             if idx == l_coresp[el]:
                 out.write(frame_f)
-                print("rr")
             idx+=1
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
@@ -54,7 +52,6 @@ def import_video_for_analysis(video_file):
 
     while 1:
         ret, frame_f = cap.read()
-
         if not ret:
             break
         frame_f = cv2.resize(frame_f, (64,64))

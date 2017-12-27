@@ -5,11 +5,11 @@ from scipy.spatial import distance
 
 
 def write_video_full_resolution(video_file_in, video_file_out, frames, l_coresp):
-    """Write a video reordered in its original resolution
+    """Write a reordered video in its original resolution
 
     Args:
       video_file_in: original file
-      video_file_out: reorderd file
+      video_file_out: reordered file
       frames: frames order
       l_coresp: links between the initial video and the video without the outliers
     """
@@ -37,6 +37,7 @@ def write_video_full_resolution(video_file_in, video_file_out, frames, l_coresp)
             idx+=1
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
+        
 def import_video_for_analysis(video_file):
     """Read the original video file, outputs two lists
     
@@ -44,7 +45,7 @@ def import_video_for_analysis(video_file):
       video_file: the file to read
 
     Returns:
-      frame_list: the frame in low resolution (64x64)
+      frame_list: the frames in low resolution (64x64)
       histo_list: one histogram per frames
     """
     
@@ -68,14 +69,14 @@ def import_video_for_analysis(video_file):
 
   
 def remove_outliers(histo_list, frame_list):
-    """remove outilers from frame_list
+    """remove outliers from frame_list
 
     Args:
       histo_list: the histograms computed for each frame
-      frame_list: the frames, the function modifies this argument
+      frame_list: the frames, *the function changes this argument*
 
     Returns
-      l_coresp: maintain the corespondance between the initial video and the video without outiliers
+      l_coresp: the connection between the initial video and the video without outliers
    """
     
     histo_med = np.median(histo_list, axis=0)
@@ -86,7 +87,7 @@ def remove_outliers(histo_list, frame_list):
 
     #0.85 is an empirical value
 
-    #remove outilers from the list
+    #remove outliers from the list
     l_coresp = [x for x in range(len(frame_list))]
 
     for i in sorted(excl_list, reverse=True):
@@ -101,11 +102,12 @@ def reord_frames(frame_list):
     
     Y = distance.cdist(frame_list, frame_list, 'euclidean')
 
-    start_img = 0 #start at 0 arbitraly
+    start_img = 0 #arbitrary start at 0 
 
-    #algorithm
-    #search a frames order based on distance between frame. We assume if two frames has a small distance, they should be consecutive
-    #search the largest distance between two consecutive frames (to find the begining of the video. We iter 10 times to find this value
+    #algorithms
+    #1. search a frames order based on distance between frames. We assume if the distance between two frames is small, they should be consecutive.
+    
+    #2. search the largest distance between two consecutive frames (to find the beginning of the video. We iterate 10 times to find this value.
     
     for _ in range(10):
         cur_im = start_img
@@ -120,9 +122,9 @@ def reord_frames(frame_list):
                 idx += 1
             seen_im.append(cur_im)
 
-        #search the largest distance between consecutive frames
+        #search the largest distance between two consecutive frames
 
-        im1 = seen_im[-1]
+        im1 = seen_im[-1] 
         maxi = 0
         im_max = 0
 

@@ -1,9 +1,9 @@
 # reorder-video
 
-This program try to reorder a video file in which the frames are mixed up.
+This program tries to reorder a video file in which the frames are mixed up.
 To find the correct order, the program assumes that the distance (euclidean) between two consecutive frames is small. This strategy is not adapted to all video.
 
-This program also find outliers (if some irrelevant frames have been added) and remove them. Outliers are found using histograms and correlation distance.
+This program also finds outliers (if some irrelevant frames have been added) and remove them. Outliers are found using histograms and correlation distance.
 
 ## Note
 
